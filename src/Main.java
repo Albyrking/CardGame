@@ -1,6 +1,14 @@
+import java.util.*;
+
 public class Main {
     public static void main(String[] args) {
-        System.out.println("Hello world!");
-        System.out.println("fsf");
+        try {
+            while (true) {
+                Room room = new Room();
+                room.startGame();
+            }
+        }catch (RuntimeException e ){
+            System.out.println("Game Over");
+        }
     }
 }
