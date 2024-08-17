@@ -115,7 +115,7 @@ public class CardGSystem {
         return cards.get(cards.size() - 1).type;
     }
 
-    public ArrayList<Card> highestValueOf(ArrayList<Card> deck7, ArrayList<Card> variant, int g) {
+    public ArrayList<Card> highestValueOf(ArrayList<Card> deck7, ArrayList<Card> variant) {
         if (variant.size() == 5) {
             return variant;
         } else {
@@ -131,7 +131,7 @@ public class CardGSystem {
                 }
                 variant1.add(deck71.get(y));
                 deck71.remove(y);
-                variants.add(highestValueOf(deck71, variant1, g + 1));
+                variants.add(highestValueOf(deck71, variant1));
             }
             DeckComparator comp = new DeckComparator();
             Collections.sort(variants, comp);

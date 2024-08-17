@@ -16,30 +16,18 @@ public class Room {
         //Scanner names simultaneously creating players
         for (int y = 1; y <= playerNum; y++) {
             System.out.print("Enter name for player number " + y + ": " );
-            players.add(new Player(in.next()));
+            String name = in.next();
+            players.add(new Player(changeName(1, name, name, players)));
         }
         while (isEnoughVotes) {
             CardG f = new CardG(players);
             CardGSystem s = new CardGSystem();
             ArrayList<Player> listOfWinners = f.go();
-            int maxPoint = playerNum + 1, maxValue = s.valueOf(listOfWinners.get(0).deck);
-            for(int y = 1 ; y <= 30; y++){
-                if(y < 25) {
-                    Thread.sleep(25);
-                }else{
-                    Thread.sleep(25*y);
-                }
-                System.out.print("/");
-            }
-            Thread.sleep(1000);
-            for(int y =1 ; y <= 70 ; y++ ){
-                Thread.sleep(7);
-                System.out.print("/");
-            }
+            int maxPoint = playerNum, maxValue = s.valueOf(listOfWinners.get(0).deck);
             System.out.println();
             System.out.println("List: ");
             for (int y = 1; y < listOfWinners.size() + 1; y++) {
-                System.out.print(y + " - \"" + listOfWinners.get(y - 1).name + "\" with deck of : {");
+                System.out.print(y + " - place\"" + listOfWinners.get(y - 1).name + "\" with deck of : {");
                 for (Card card : listOfWinners.get(y - 1).deck) {
                     System.out.print(card.name + "  ");
                 }
@@ -74,13 +62,7 @@ public class Room {
             }
             System.out.println("|\n|\n\\/");
             if (isEnoughVotes) {
-                System.out.println("Game will keep going\n\n\n");
-                for(int y = 1 ; y <= 70 ; y++){
-                    Thread.sleep(y);
-                    System.out.print("/");
-                }
-                Thread.sleep(2000);
-                System.out.println("////");
+                System.out.println("Game will keep going\n");
             }
             for (int y = 0; y < players.size(); y++) {
                 players.get(y).clearDeck();
@@ -89,10 +71,7 @@ public class Room {
         throw new RuntimeException();
     }catch (InputMismatchException e){
         System.out.println("It's not a number. Try again");
-    } catch (InterruptedException e) {
-        throw new RuntimeException(e);
     }
-
 
     }
 
@@ -102,10 +81,26 @@ public class Room {
         int sum = 0;
         for (Player player : players) {
             System.out.print(player.name + "' response: ");
-            if (in.next().equals("Yes")) {
+            if (in.next().toUpperCase().equals("YES")) {
                 sum++;
             }
         }
         return sum;
+    }
+    public String changeName(int num, String newName, String name, ArrayList<Player> players){
+        if(!contains(newName, players)){
+            return newName;
+        }else{
+            newName = name + "(" + num +")";
+            return changeName(num + 1, newName, name, players);
+        }
+    }
+    public boolean contains(String name, ArrayList<Player> players){
+        for(int y =0 ; y< players.size() ; y++){
+            if(name.equals(players.get(y).name)){
+                return true;
+            }
+        }
+        return false;
     }
 }

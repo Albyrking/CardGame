@@ -16,7 +16,6 @@ public class CardG {
         for (int y = 1; y <= CardTypes.values().length; y++) {
             for (int u = 1; u <= CardSuits.values().length; u++) {
                 cards.add(new Card(y, u));
-
             }
         }
         System.out.println();
@@ -43,11 +42,11 @@ public class CardG {
             CardGSystem system = new CardGSystem();
             ArrayList<Card> emptyArray = new ArrayList<>();
             for(int u = 0; u < 5 ; u++){
-                players.get(y).addCard(cards.get(u));
+                players.get(y).addCard(communityCards.get(u));
             }
-            players.get(y).setDeck(system.highestValueOf(players.get(y).deck, emptyArray, 0));
-
+            players.get(y).setDeck(system.highestValueOf(players.get(y).deck, emptyArray));
         }
+        System.out.println();
         PlayersDeckComparator comp = new PlayersDeckComparator();
         Collections.sort(players, comp);
         return players;
