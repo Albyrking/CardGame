@@ -50,7 +50,7 @@ public class Room {
             }
             System.out.println(" Scores : ");
             for (Player player : listOfWinners) {
-                System.out.println(player.name + ": " + player.pScore + "  -->  " + player.score);
+                System.out.println(player.name + ": " + player.pScore + "  -->  " + player.score + "\t (+" +  (player.score - player.pScore) + ")");
             }
             System.out.println();
             int votes = votes(players);

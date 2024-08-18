@@ -3,7 +3,7 @@ import java.util.*;
 
 public class CardGSystem {
 
-    public boolean isPair(int numOfSameCards, int numOfMatches, ArrayList<Card> cards) {
+    public int isPair(int numOfSameCards, int numOfMatches, ArrayList<Card> cards) {
         Collections.sort(cards);
         Map<Integer, Integer> frequency = new HashMap<>();
         for (Card card : cards) {
@@ -13,43 +13,43 @@ public class CardGSystem {
                 frequency.put(card.type, 1 + frequency.get(card.type));
             }
         }
-        int g = 0;
+        int g = 0, type = 0;
         for (Map.Entry<Integer, Integer> entry : frequency.entrySet()) {
             if (entry.getValue() >= numOfSameCards) {
                 g++;
+                type = entry.getKey();
             }
         }
         if (g == numOfMatches) {
-            return true;
+            return type;
         } else {
-            return false;
+            return -1;
         }
     }
 
     public boolean isTwoPair(ArrayList<Card> cards) {
         Collections.sort(cards);
-        return isPair(2, 2, cards);
+        return isPair(2, 2, cards) != -1;
     }
-
-    public boolean isThreeOfKind(ArrayList<Card> cards) {
+    public int isThreeOfKind(ArrayList<Card> cards) {
         Collections.sort(cards);
         return isPair(3, 1, cards);
     }
 
-    public boolean isStraight(ArrayList<Card> cards, boolean isSameSuitForALl) {
+    public int isStraight(ArrayList<Card> cards, boolean isSameSuitForALl) {
         Collections.sort(cards);
         for (int y = 0; y < cards.size() - 1; y++) {
             if (isSameSuitForALl) {
                 if (cards.get(y).suit != cards.get(y + 1).suit || cards.get(y).type + 1 != cards.get(y + 1).type) {
-                    return false;
+                    return -1;
                 }
             } else {
                 if (cards.get(y).type + 1 != cards.get(y + 1).type) {
-                    return false;
+                    return -1;
                 }
             }
         }
-        return true;
+        return cards.get(0).type;
     }
 
     public boolean isFlush(ArrayList<Card> cards) {
@@ -76,47 +76,49 @@ public class CardGSystem {
         return frequency.size() == 2 && (frequency.get(cards.get(0)) == 2 || frequency.get(cards.get(0)) == 3);
     }
 
-    public boolean isFourOfKind(ArrayList<Card> cards) {
+    public int isFourOfKind(ArrayList<Card> cards) {
         Collections.sort(cards);
         return isPair(4, 1, cards);
     }
 
-    public boolean isStraightFlush(ArrayList<Card> cards) {
+    public int isStraightFlush(ArrayList<Card> cards) {
         Collections.sort(cards);
-        return isStraight(cards, true) && isFlush(cards);
+        if(isFlush(cards)){
+            return isStraight(cards, true);
+        }
+        return -1;
     }
 
     public boolean isRoyalFlush(ArrayList<Card> cards) {
         Collections.sort(cards);
-        return isStraightFlush(cards) && (cards.get(0).type == 9);
+        return isStraightFlush(cards) != -1 && (cards.get(0).type == 9);
     }
 
     public int valueOf(ArrayList<Card> cards) {
         if (isRoyalFlush(cards)) {
-            return 22;
-        } else if (isStraightFlush(cards)) {
-            return 21;
-        } else if (isFourOfKind(cards)) {
-            return 20;
+            return 74;
+        } else if (isStraightFlush(cards) != -1) {
+            return 64 + isStraightFlush(cards);
+        } else if (isFourOfKind(cards) != -1) {
+            return 51 + isFourOfKind(cards);
         } else if (isFullHouse(cards)) {
-            return 19;
+            return 51;
         } else if (isFlush(cards)) {
-            return 18;
-        } else if (isStraight(cards, false)) {
-            return 17;
-        } else if (isThreeOfKind(cards)) {
-            return 16;
+            return 50;
+        } else if (isStraight(cards, false) != -1) {
+            return 40 + isStraight(cards, false) ;
+        } else if (isThreeOfKind(cards) != -1) {
+            return 27 + isThreeOfKind(cards);
         } else if (isTwoPair(cards)) {
-            return 15;
-        } else if (isPair(2, 1, cards)) {
-            return 14;
+            return 27;
+        } else if (isPair(2, 1, cards) != -1) {
+            return 13 + isPair(2, 1, cards);
         }
         Collections.sort(cards);
         return cards.get(cards.size() - 1).type;
     }
-
     public ArrayList<Card> highestValueOf(ArrayList<Card> deck7, ArrayList<Card> variant) {
-        if (variant.size() == 5) {
+        if (variant.size() == 5){
             return variant;
         } else {
             ArrayList<ArrayList<Card>> variants = new ArrayList<>();
@@ -138,4 +140,9 @@ public class CardGSystem {
             return variants.get(0);
         }
     }
+
+
+
+
+
 }
